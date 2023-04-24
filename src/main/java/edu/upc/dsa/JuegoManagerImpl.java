@@ -30,6 +30,7 @@ public class JuegoManagerImpl implements JuegoManager {
     public void createJuego(Integer N, Integer P) {
         if (juego.getEstado().equals("NO_INICIADO") | juego.getEstado().equals("FINALIZADO")){
             this.juego = new Juego(N,P);
+            juego.setEstado("INICIADO_EN_PREPARACIÓN");
             logger.info("Creation of the Game");
         } else{
             logger.info("The game is already running");
@@ -39,8 +40,8 @@ public class JuegoManagerImpl implements JuegoManager {
     @Override
     public Usuario addUsuario(String id, String nombre, String apellido) {
         Usuario u = new Usuario(id,nombre,apellido);
-        logger.info("new usuario " + u);
-        this.usuarios.add (u);
+        logger.info("new usuario " + u );
+        this.usuarios.add(u);
         logger.info("new user added to the sytem");
         return u;
     }
@@ -68,7 +69,20 @@ public class JuegoManagerImpl implements JuegoManager {
 
     @Override
     public void initiatePartida(String idUsuario) {
-
+        if(!juego.EquipasCompletas()) {
+            Usuario u = this.getUsuario(idUsuario);
+            if (u.IsEnUnaPartida() == false) {
+                juego.addUsuarioPartida(u);
+                if(juego.EquipasCompletas()){
+                    logger.info("the teams are full,");
+                    juego.setEstado("INICIADO_EN_FUNCIONAMIENTO");
+                }
+            } else {
+                logger.info("Usuario" + u + " is already playing !");
+            }
+        } else {
+            logger.info("the teams are already full");
+        }
     }
 
     @Override
@@ -98,12 +112,12 @@ public class JuegoManagerImpl implements JuegoManager {
         if (u.IsEnUnaPartida()){
             return u.getCantidadDeVida();
         }
-        return null;
+        return 0;
     }
 
     @Override
     public Integer getVidaEquipo(Integer numeroEquipo) {
-        return null;
+        return juego.getEquipo(numeroEquipo).getVidaEquipo();
     }
 
     @Override

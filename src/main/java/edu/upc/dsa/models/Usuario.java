@@ -12,17 +12,22 @@ public class Usuario {
     Integer solda;
     List<Objecto> inventoria;
 
-    Boolean enUnaPartida;
-
+    Boolean enUnaPartida = false;
 
     public Usuario(String id, String nombre, String apellido) {
         this.id =id;
         this.nombre= nombre;
         this.apellido = apellido;
-        this.solda = 25;
-        this.cantidadDeVida=100;
         this.inventoria = new LinkedList<>();
-        this.enUnaPartida = false;
+        this.cantidadDeVida=100;
+        this.solda=25;
+    }
+    public Boolean getEnUnaPartida() {
+        return enUnaPartida;
+    }
+
+    public void setEnUnaPartida(Boolean enUnaPartida) {
+        this.enUnaPartida = enUnaPartida;
     }
 
     public String getId() {
